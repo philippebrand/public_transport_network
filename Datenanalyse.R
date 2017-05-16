@@ -26,6 +26,9 @@ istdaten <- read.csv(file.path(dataFolder,"istDaten","2017-05-08istdaten.csv"),
 koordinaten <- read.csv(file.path(dataFolder,"stationsliste","bfkoordgeo.csv"), 
                      encoding = "UTF-8",stringsAsFactors = FALSE, sep = ",")
 
+solldaten <- read.csv(file.path(dataFolder,"fp2017jahresfahrplan","FPLAN"), 
+                        encoding = "UTF-8",stringsAsFactors = FALSE, sep = "", row.names = FALSE)
+
 
 daten <- merge.data.frame(istdaten, koordinaten, by.x = "BPUIC", by.y = "StationID", all.x = TRUE, sort = FALSE)
 
@@ -43,3 +46,13 @@ ggsave("plot.png", width = 15, height = 15)
 daten.prog <- subset(daten, AB_PROGNOSE != "")
 
 daten.prog$verspaetung <- (strptime(daten.prog$AB_PROGNOSE, format = '%d.%m.%Y %H:%M') - strptime(daten.prog$ABFAHRTSZEIT, format = '%d.%m.%Y %H:%M'))/60
+
+linien <- c(unique(daten.prog$LINIEN_ID))
+
+for(i in c(linien)){
+  temp <- (subset(daten, LINIEN_ID == i))
+  print(min(temp$ABFAHRTSZEIT))
+}
+
+
+
