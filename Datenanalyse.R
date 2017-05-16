@@ -40,6 +40,6 @@ map
 ggsave("plot.png", width = 15, height = 15)
 
 
+daten.prog <- subset(daten, AB_PROGNOSE != "")
 
-
-
+daten.prog$verspaetung <- (strptime(daten.prog$AB_PROGNOSE, format = '%d.%m.%Y %H:%M') - strptime(daten.prog$ABFAHRTSZEIT, format = '%d.%m.%Y %H:%M'))/60
