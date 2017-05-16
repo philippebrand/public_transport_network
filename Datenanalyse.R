@@ -21,7 +21,7 @@ dataFolder <- "data"
 # Merge Haltestelle.csv and Haltepunkt.csv with halt_id as unique identifier
 # Read in the data, use encoding UTF-8
 
-istdaten <- read.csv(file.path(dataFolder,"istDaten","2017-05-08istdaten.csv"), 
+istdaten <- read.csv(file.path(dataFolder,"istDaten","2017-05-15istdaten.csv"), 
                      encoding = "UTF-8",stringsAsFactors = FALSE, sep = ";")
 
 koordinaten <- read.csv(file.path(dataFolder,"stationsliste","bfkoordgeo.csv"), 
@@ -91,9 +91,6 @@ coordinates(vert) <- ~longitude+latitude
 
 
 
-gg$edges
-edges.versp.vec
-
 # Convert edges to SP lines
 edges <- gg$edges
 edges
@@ -107,13 +104,20 @@ for (i in seq_along(edges)) {edges[[i]] <- spChFIDs(edges[[i]], as.character(i))
 edges <- do.call(rbind, edges)
 edgesdf <- SpatialLinesDataFrame(edges,data.frame(gg$edges), match.ID = TRUE)
 
-edgesdf
 
-pal <- colorNumeric(palette = "Reds", domain = c(3,5,10,20,max(edgesdf$edges.versp.vec)/60), na.color = 'lightblue')
-?colorNumeric
+red4 <- c('#fee5d9', '#fcae91', '#fb6a4a', '#cb181d')
+red5 <- c('#fcbba1', '#fc9272', '#fb6a4a', '#de2d26', '#a50f15')
 
 
-?colorRamplightblue
+pal <- colorNumeric(palette = red5, 
+                    domain = c(3,max(edgesdf$edges.versp.vec)/60),
+                    na.color = 'lightblue')
+
+pal <- colorBin(palette = red5, 
+                    domain = c(3,max(edgesdf$edges.versp.vec)/60),
+                    bins = c(5,10,20),
+                    na.color = 'lightblue')
+
 
 popup <- paste(vert$name_long,"<br/>Degree:",vert$degree)
 popupedge <- paste("Linie ", edgesdf$edges.linie.vec,"<br/>Verspätung:",round(edgesdf$edges.versp.vec/60,1), " min")
